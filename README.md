@@ -125,6 +125,61 @@ Add the script exec
 exit 0
 ```
 
+## DDNS (dynamic dns)
+
+### Install Prerequisit for DDNS
+
+Install package
+```bash
+opkg update
+opkg install ddns-scripts ddns-scripts-gandi ddns-scripts-services ddns-scripts-utils curl ca-bundle
+```
+
+### Configure DDNS
+
+Edit ddns
+```bash
+nano /etc/config/ddns
+```
+
+```bash
+config ddns 'global'
+        option ddns_dateformat '%F %R'
+        option ddns_loglines '250'
+        option upd_privateip '0'
+
+config service 'gandi'
+        option enabled '1'
+        option service_name 'gandi.net'
+        option domain 'xxxxx.yy'
+        option username 'subdomain_value'
+        option password 'XXXXXXXXXXXXXXXXXXXX'
+        option interface 'wwan0'
+        option ip_network 'wwan0'
+        option ip_source 'web'
+        option ip_url 'http://checkip.dyndns.org/'
+        option use_https '1'
+        option cacert '/etc/ssl/certs/ca-certificates.crt'
+        option check_interval 10
+        option lookup_host 'subdomain_value.xxxxx.yy'
+```
+
+### Testing
+
+```bash
+/usr/lib/ddns/dynamic_dns_updater.sh -n gandi -v2 start
+```
+
+### Restart service
+
+```bash
+service ddns restart
+```
+
+### More info
+
+https://openwrt.org/docs/guide-user/services/ddns/client
+
 
 # Sources
 
